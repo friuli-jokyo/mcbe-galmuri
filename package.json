@@ -1,6 +1,6 @@
 {
   "name": "mcbe-galmuri",
-  "version": "2.404.0",
+  "version": "2.404.1",
   "description": "Minecraft Bedrock Edition resource pack for Galmuri font.",
   "main": "index.js",
   "scripts": {
