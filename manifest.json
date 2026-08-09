@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "header": {
+    "description": "Bitmap fonts inspired by the font design from Nintendo DS.",
+    "name": "Galmuri Font",
+    "uuid": "78343852-d369-43ce-99c1-bb97f8300722",
+    "version": [
+      2,
+      403,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      19,
+      30
+    ]
+  },
+  "modules": [
+    {
+      "description": "Galmuri Font Pack",
+      "type": "resources",
+      "uuid": "a51c46b8-780e-46b7-922a-b5fcd8113932",
+      "version": [
+        2,
+        403,
+        0
+      ]
+    }
+  ],
+  "subpacks": [
+    {
+      "folder_name": "11",
+      "name": "Galmuri11",
+      "memory_tier": 0
+    },
+    {
+      "folder_name": "7",
+      "name": "Galmuri7",
+      "memory_tier": 0
+    },
+    {
+      "folder_name": "9",
+      "name": "Galmuri9",
+      "memory_tier": 0
+    }
+  ]
+}

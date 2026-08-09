@@ -1,0 +1,34 @@
+{
+  "name": "mcbe-galmuri",
+  "version": "2.403.0",
+  "description": "Minecraft Bedrock Edition resource pack for Galmuri font.",
+  "main": "index.js",
+  "scripts": {
+    "download": "tsx src/download.ts",
+    "convert": "tsx src/convert.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "OFL-1.1",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.7.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.3",
+    "bdfparser": "^2.2.5",
+    "octokit": "^5.0.5",
+    "readlineiter": "^1.0.1",
+    "unzipit": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.10",
+    "typescript": "^7.0.2"
+  }
+}

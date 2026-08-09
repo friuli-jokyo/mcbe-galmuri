@@ -1,0 +1,56 @@
+name: sync
+permissions: {}
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      release: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+            persist-credentials: false
+      - name: Store current version
+        run: echo "current_version=$(cat bdf/version.txt)" >> $GITHUB_ENV
+      - name: Set up pnpm and Node.js
+        uses: pnpm/setup@4700d737c3d7a2e7199f3d42a920f0bf7f34e411 # v2.0.1
+        with:
+          runtime: node@24
+          cache: true
+      - name: Download Galmuri from source and check version
+        run: |
+          pnpm run download
+          echo "latest_version=$(cat bdf/version.txt)" >> $GITHUB_ENV
+          cat bdf/version.txt | grep -qP "v\d+\.\d+\.\d"
+          bash version.sh $(cat bdf/version.txt)
+          echo "package_version=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+      - name: Convert Galmuri to Minecraft font
+        if: env.current_version != env.latest_version
+        run: pnpm run convert
+      - name: Generate Minecraft resource pack
+        if: env.current_version != env.latest_version
+        run: bash generate-mcpack.sh
+      - name: Commit and Push
+        if: env.current_version != env.latest_version
+        env:
+          PACKAGE_VERSION: ${{ env.package_version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "v${PACKAGE_VERSION}"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF_NAME}
+      - name: Create Release
+        if: env.current_version != env.latest_version
+        uses: softprops/action-gh-release@v1
+        with:
+          files: GalmuriFont.mcpack
+          tag_name: "v${{ env.package_version }}"
