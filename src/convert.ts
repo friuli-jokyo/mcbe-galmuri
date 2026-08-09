@@ -87,7 +87,12 @@ function generateDefault8Image(font: Font): Canvas {
             context.save();
             continue;
         }
+        context.save();
+        if (font.glyph(char)?.meta.bbxoff ?? 0 < 0) {
+            context.translate(-(font.glyph(char)?.meta.bbxoff ?? 0), 0);
+        }
         font.draw(char).draw2canvas(context, whiteColorPalette);
+        context.restore();
         context.translate(pointSize, 0);
     }
 
@@ -114,7 +119,12 @@ function generateUnicodeGridImage(font: Font, sprite: number) {
         const char = String.fromCharCode(charCode);
         if (font.glyphs.get(charCode)) {
             noChar = false;
+            context.save();
+            if (font.glyph(char)?.meta.bbxoff ?? 0 < 0) {
+                context.translate(-(font.glyph(char)?.meta.bbxoff ?? 0), 0);
+            }
             font.draw(char).draw2canvas(context, whiteColorPalette);
+            context.restore();
         }
         context.translate(pointSize, 0);
     }
