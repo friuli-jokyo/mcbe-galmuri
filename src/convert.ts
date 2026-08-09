@@ -77,7 +77,7 @@ function generateDefault8Image(font: Font): Canvas {
 
     const canvas = createCanvas(pointSize*16, pointSize*16);
     const context = canvas.getContext("2d");
-    context.translate(-4, -3);
+    context.translate(font.headers?.fbbxoff ?? 0, font.headers?.fbbyoff ?? 0);
     context.save();
 
     for (const char of default8) {
@@ -99,7 +99,7 @@ function generateUnicodeGridImage(font: Font, sprite: number) {
 
     const canvas = createCanvas(pointSize*16, pointSize*16);
     const context = canvas.getContext("2d");
-    context.translate(-4, -3);
+    context.translate(font.headers?.fbbxoff ?? 0, font.headers?.fbbyoff ?? 0);
     context.save();
 
     let noChar = true;
