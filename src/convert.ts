@@ -39,13 +39,13 @@ for (const variant of FONT_VARIANTS) {
         canvas.toBuffer("image/png")
     );
 
-    for (var sprite = 0; sprite < 16*16; sprite++) {
-        const fileName = "glyph_" + sprite.toString(16).padStart(2, "0").toUpperCase();
+    for (var pageNumber = 0; pageNumber < 16*16; pageNumber++) {
+        const fileName = "glyph_" + pageNumber.toString(16).padStart(2, "0").toUpperCase();
         console.log(`Generating ${fileName}.png for ${variant.name}...`);
 
-        const canvas = generateGridFontImage(font, [...Array(16)].map((_, y) => [...Array(16)].map((_, x) => sprite*16*16 + y*16 + x)));
+        const canvas = generateGridFontImage(font, [...Array(16)].map((_, y) => [...Array(16)].map((_, x) => pageNumber*16*16 + y*16 + x)));
         if (!canvas) {
-            console.log(`No characters found for sprite ${sprite}, skipping...`);
+            console.log(`No characters found for ${fileName}, skipping...`);
             continue;
         }
         fs.writeFileSync(
