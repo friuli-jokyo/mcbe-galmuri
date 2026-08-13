@@ -19,4 +19,4 @@ DOT_VERSION=${VERSION[0]}.${VERSION[1]}.${VERSION[2]}
 COMMA_VERSION=${VERSION[0]},${VERSION[1]},${VERSION[2]}
 
 cat package.json | jq ".version|=\"$DOT_VERSION\"" > tmp && mv tmp package.json
-cat manifest.json | jq ".header.version|=[$COMMA_VERSION] | .modules.[0].version|=[$COMMA_VERSION]" > tmp && mv tmp manifest.json
+cat manifest.json | jq ".header.version|=[$COMMA_VERSION] | .modules[0].version|=[$COMMA_VERSION]" > tmp && mv tmp manifest.json
