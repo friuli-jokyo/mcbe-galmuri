@@ -32,6 +32,9 @@ export function generateGridFontImage(font: Font, charMatrix: number[][]) {
 
     const pointSize = font.headers?.pointsize ?? 0;
 
+    const bbyMinLimit = font.headers ? font.headers.fbby + font.headers.fbbyoff*2 - font.headers.pointsize : 0;
+    const bbyMaxLimit = font.headers ? bbyMinLimit + font.headers.pointsize : 0;
+
     const canvas = createCanvas(pointSize*16, pointSize*16);
     const context = canvas.getContext("2d");
     context.translate(font.headers?.fbbxoff ?? 0, font.headers?.fbbyoff ?? 0);
@@ -41,15 +44,28 @@ export function generateGridFontImage(font: Font, charMatrix: number[][]) {
 
     for (const row of charMatrix) {
         for (const charCode of row) {
-            if (font.glyphs.get(charCode)) {
-                noCharRendered = false;
-                const char = String.fromCodePoint(charCode);
+            const char = String.fromCodePoint(charCode);
+            const glyph = font.glyphs.get(charCode) ? font.glyph(char) : null;
+            // only render the character if it fits within the point size
+            if (glyph && glyph.meta.bbw <= pointSize && glyph.meta.bbh <= pointSize) {
                 context.save();
-                if (font.glyph(char)?.meta.bbxoff ?? 0 < 0) {
+                const bbxoff = glyph.meta.bbxoff ?? 0;
+                const bbyoff = glyph.meta.bbyoff;
+                const bbh = glyph.meta.bbh;
+                if (bbxoff < 0) {
                     // shift the character to the right if it has a negative x offset
-                    context.translate(-(font.glyph(char)?.meta.bbxoff ?? 0), 0);
+                    context.translate(-bbxoff, 0);
                 }
-                font.draw(char).draw2canvas(context, whiteColorPalette);
+                if (bbyoff < bbyMinLimit) {
+                    // shift the character up if it has a negative y offset
+                    context.translate(0, bbyoff - bbyMinLimit);
+                }
+                if (bbyoff + bbh > bbyMaxLimit) {
+                    // shift the character down if it has a positive y offset
+                    context.translate(0, (bbyoff + bbh) - bbyMaxLimit);
+                }
+                glyph.draw().draw2canvas(context, whiteColorPalette);
+                noCharRendered = false;
                 context.restore();
             }
             context.translate(pointSize, 0);
